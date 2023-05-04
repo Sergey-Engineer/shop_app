@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 
 import 'package:shop_app/widgets/products_grid.dart';
 
+import '../providers/cart.dart';
 import '../providers/products.dart';
+import 'package:shop_app/widgets/badge.dart';
 
 enum FilterOptions { favorites, all }
 
@@ -45,7 +47,18 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                     child: Text('Show All'),
                   )
                 ];
-              })
+              }),
+          Consumer<Cart>(
+            builder: (context, cart, childIcon) => BadgeWidget(
+              value: cart.itemCount.toString(),
+              child: childIcon!,
+            ),
+            child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.shopping_cart,
+                )),
+          ),
         ],
       ),
       body: ProductsGrid(_showOnlyFavorites),
