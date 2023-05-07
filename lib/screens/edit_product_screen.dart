@@ -41,6 +41,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveForm() {
+    final _isValid = _form.currentState!.validate();
+    if (!_isValid) {
+      return;
+    }
     _form.currentState!.save();
   }
 
@@ -67,6 +71,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Title',
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please provide a value.';
+                    }
+                    return null;
+                  },
                   onSaved: (value) {
                     _editedProduct = Product(
                         id: _editedProduct.id,
