@@ -41,8 +41,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveForm() {
-    final _isValid = _form.currentState!.validate();
-    if (!_isValid) {
+    final isValid = _form.currentState!.validate();
+    if (!isValid) {
       return;
     }
     _form.currentState!.save();
@@ -93,6 +93,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       FocusScope.of(context)
                           .requestFocus(_descriptionFocusNode);
                     },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter a price';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Please enter a valid number.';
+                      }
+                      if (double.parse(value) <= 0) {
+                        return 'Please enter a number greater than zero';
+                      }
+                      return null;
+                    },
                     focusNode: _priceFocusNode,
                     decoration: const InputDecoration(
                       labelText: 'Price',
@@ -109,6 +121,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     focusNode: _descriptionFocusNode,
                     maxLines: 3,
                     keyboardType: TextInputType.multiline,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter a description';
+                      }
+                      if (value.length < 10) {
+                        return 'Should be at least 10 characters long.';
+                      }
+                      return null;
+                    },
                     decoration: const InputDecoration(
                       labelText: 'Description',
                     ),
@@ -144,6 +165,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         textInputAction: TextInputAction.done,
                         controller: _imageUrlController,
                         focusNode: _imageUrlFocusNode,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter an image URL.';
+                          }
+                          if (!value.startsWith('http') &&
+                              !value.startsWith('https')) {
+                            return 'Please enter a valid URL.';
+                          }
+                          if (!value.endsWith('png') &&
+                              !value.endsWith('.jpg') &&
+                              !value.endsWith('.jpeg')) {
+                            return 'Please enter a valid image URL';
+                          }
+                          return null;
+                        },
                         onEditingComplete: () {
                           setState(() {});
                         },
